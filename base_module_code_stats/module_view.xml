@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2015 Akretion (http://www.akretion.com/)
+    @author: Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="module_form" model="ir.ui.view">
+    <field name="name">module.code.stats.ir.module.module.form</field>
+    <field name="model">ir.module.module</field>
+    <field name="inherit_id" ref="base.module_form" />
+    <field name="arch"  type="xml">
+        <field name="state" position="after">
+            <field name="type"/>
+            <field name="js_code_lines"
+                attrs="{'invisible': [('state', 'not in', ('installed', 'to upgrade'))]}"/>
+            <field name="xml_code_lines"
+                attrs="{'invisible': [('state', 'not in', ('installed', 'to upgrade'))]}"/>
+            <field name="python_code_lines"
+                attrs="{'invisible': [('state', 'not in', ('installed', 'to upgrade'))]}"/>
+            <field name="total_code_lines"
+                attrs="{'invisible': [('state', 'not in', ('installed', 'to upgrade'))]}"/>
+        </field>
+    </field>
+</record>
+
+<record id="module_tree" model="ir.ui.view">
+    <field name="name">module.code.stats.ir.module.module.tree</field>
+    <field name="model">ir.module.module</field>
+    <field name="inherit_id" ref="base.module_tree" />
+    <field name="arch"  type="xml">
+        <field name="author" position="after">
+            <field name="type"/>
+        </field>
+    </field>
+</record>
+
+<record id="view_module_filter" model="ir.ui.view">
+    <field name="name">module.code.stats.ir.module.module.search</field>
+    <field name="model">ir.module.module</field>
+    <field name="inherit_id" ref="base.view_module_filter" />
+    <field name="arch"  type="xml">
+        <filter string="Author" position="after">
+            <filter name="type" string="Module Type" context="{'group_by': 'type'}"/>
+        </filter>
+    </field>
+</record>
+
+<record id="module_graph" model="ir.ui.view">
+    <field name="name">module.code.stats.module.graph</field>
+    <field name="model">ir.module.module</field>
+    <field name="arch"  type="xml">
+        <graph string="Modules" type="pivot">
+            <field name="total_code_lines" type="measure"/>
+        </graph>
+    </field>
+</record>
+
+<record id="base.open_module_tree" model="ir.actions.act_window">
+    <field name="view_mode">kanban,tree,form,graph</field>
+</record>
+
+</data>
+</openerp>
