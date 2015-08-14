@@ -78,9 +78,9 @@ class IrModuleModule(models.Model):
             type = 'official'
         elif self.author and 'Odoo Community Association' in self.author:
             type = 'oca'
-        elif self.name and self.name.endswith('_profile'):
+        elif isinstance(self.name, (str, unicode)) and self.name.endswith('_profile'):
             type = 'specific'
-        elif self.name and self.name.startswith(SPECIFIC_PREFIX):
+        elif isinstance(self.name, (str, unicode)) and self.name.startswith(SPECIFIC_PREFIX):
             type = 'specific'
         else:
             type = 'community'
@@ -109,6 +109,7 @@ class IrModuleModule(models.Model):
                     'cloc',
                     '--exclude-dir=lib',
                     '--skip-uniqueness',
+                    '--follow-links',
                     '--exclude-ext=xsd',
                     '--not-match-f="__openerp__.py|index.html"',
                     '--csv',
