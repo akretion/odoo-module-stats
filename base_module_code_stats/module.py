@@ -40,7 +40,10 @@ class IrModuleModule(models.Model):
         ('community', 'Community (excluding OCA)'),
         ('specific', 'Specific'),
         ], string='Module Type', store=True, readonly=True,
-        compute='set_module_type')
+        compute='set_module_type_repository')
+    repository = fields.Char(
+        string='Repository', store=True, readonly=True,
+        compute='set_module_type_repository')
     js_code_lines = fields.Integer(
         string='Number of Lines of JS Code',
         compute='_compute_code_lines', readonly=True, store=True)
@@ -59,14 +62,14 @@ class IrModuleModule(models.Model):
 
     @api.one
     @api.depends('author', 'name')
-    def set_module_type(self):
+    def set_module_type_repository(self):
         type = False
+        module_path = False
         web_addons_path = modules.get_module_path('web')
         official_addons_path = os.path.split(web_addons_path)[0]
         # for the official module, we could loop on addons_path
         # and take the path that contains the 'web' module -> we know it's
         full_module_path = modules.get_module_path(self.name)
-        module_path = False
         if full_module_path:
             module_path = os.path.split(full_module_path)[0]
         if self.name == 'base':
@@ -81,7 +84,11 @@ class IrModuleModule(models.Model):
             type = 'specific'
         else:
             type = 'community'
+        # set short path
+        if module_path:
+            module_path = os.path.split(module_path)[1]
         self.type = type
+        self.repository = module_path
 
     @api.one
     @api.depends('name', 'state', 'latest_version', 'author')
