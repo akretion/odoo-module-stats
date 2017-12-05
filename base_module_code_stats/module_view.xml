@@ -16,6 +16,8 @@
         <field name="state" position="after">
             <field name="type"/>
             <field name="repository"/>
+            <field name="with_integrator"/>
+            <field name="with_only_integrator"/>
             <field name="js_code_lines"
                 attrs="{'invisible': [('state', 'not in', ('installed', 'to upgrade'))]}"/>
             <field name="xml_code_lines"

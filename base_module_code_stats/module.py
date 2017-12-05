@@ -1,24 +1,9 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
+# coding: utf-8
 #    Base Module Code Stats module for Odoo
 #    Copyright (C) 2015 Akretion (http://www.akretion.com)
 #    @author Alexis de Lattre <alexis.delattre@akretion.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
 
 from openerp import models, fields, api, modules
 import os
@@ -28,7 +13,6 @@ import tempfile
 import unicodecsv
 
 logger = logging.getLogger(__name__)
-SPECIFIC_PREFIX = 'barroux'
 
 
 class IrModuleModule(models.Model):
@@ -41,6 +25,12 @@ class IrModuleModule(models.Model):
         ('specific', 'Specific'),
         ], string='Module Type', store=True, readonly=True,
         compute='set_module_type_repository')
+    with_integrator = fields.Boolean(
+        string='With the Integrator', compute='_compute_check_integrator',
+        help="Integrator has participated to the dev of the module")
+    with_only_integrator = fields.Boolean(
+        string='By the Integrator', compute='_compute_check_integrator',
+        help="The module has only one author: the integrator")
     repository = fields.Char(
         string='Repository', store=True, readonly=True,
         compute='set_module_type_repository')
@@ -60,6 +50,26 @@ class IrModuleModule(models.Model):
         string='Total Number of Lines of Code',
         compute='_compute_code_lines', readonly=True, store=True)
 
+    @api.multi
+    @api.depends('author', 'name')
+    def _compute_check_integrator(self):
+        for rec in self:
+            if rec.author and self._get_integator_name() in rec.author and \
+                    len(self._get_integator_name()) == len(rec.author):
+                rec.with_only_integrator = True
+            elif rec.author and self._get_integator_name() in rec.author:
+                rec.with_integrator = True
+
+    @api.model
+    def _get_integator_name(self):
+        """ Customize with the integrator name """
+        return 'Akretion'
+
+    @api.model
+    def _get_specific_prefix_module(self):
+        """ Customize with the prefix of your specific modules """
+        return 'barroux'
+
     @api.one
     @api.depends('author', 'name')
     def set_module_type_repository(self):
@@ -78,9 +88,11 @@ class IrModuleModule(models.Model):
             type = 'official'
         elif self.author and 'Odoo Community Association' in self.author:
             type = 'oca'
-        elif isinstance(self.name, (str, unicode)) and self.name.endswith('_profile'):
+        elif isinstance(self.name, (str, unicode)) and self.name.endswith(
+                '_profile'):
             type = 'specific'
-        elif isinstance(self.name, (str, unicode)) and self.name.startswith(SPECIFIC_PREFIX):
+        elif isinstance(self.name, (str, unicode)) and self.name.startswith(
+                self._get_specific_prefix_module()):
             type = 'specific'
         else:
             type = 'community'
