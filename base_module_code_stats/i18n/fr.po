@@ -1,21 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_module_code_stats
+#   * base_module_code_stats
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-06 11:37+0000\n"
-"PO-Revision-Date: 2017-12-06 12:53+0100\n"
+"POT-Creation-Date: 2017-12-06 19:55+0000\n"
+"PO-Revision-Date: 2017-12-06 19:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"Language: fr\n"
-"X-Generator: Poedit 2.0.1\n"
 
 #. module: base_module_code_stats
 #: view:ir.module.module:base_module_code_stats.view_module_filter
@@ -23,12 +21,23 @@ msgid "Author"
 msgstr "Auteur"
 
 #. module: base_module_code_stats
+#: selection:ir.module.module,integrator:0
+msgid "By your Integrator"
+msgstr "Par votre intégrateur"
+
+#. module: base_module_code_stats
 #: selection:ir.module.module,type:0
 msgid "Community (excluding OCA)"
 msgstr "Communauté (excluant OCA)"
 
 #. module: base_module_code_stats
+#: help:ir.module.module,integrator:0
+msgid "Indicate the degree of participation of the integrator"
+msgstr "Indicate the degree of participation of the integrator"
+
+#. module: base_module_code_stats
 #: view:ir.module.module:base_module_code_stats.view_module_filter
+#: field:ir.module.module,integrator:0
 msgid "Integrator"
 msgstr "Intégrateur"
 
@@ -66,7 +75,7 @@ msgstr "Lignes de code Python"
 #. module: base_module_code_stats
 #: field:ir.module.module,xml_code_lines:0
 msgid "Number of Lines of XML"
-msgstr "Lignes de  XML"
+msgstr "Lignes de XML"
 
 #. module: base_module_code_stats
 #: selection:ir.module.module,type:0
@@ -79,6 +88,11 @@ msgid "Official"
 msgstr "Officiel"
 
 #. module: base_module_code_stats
+#: selection:ir.module.module,integrator:0
+msgid "Other integrator"
+msgstr "Autre intégrateur"
+
+#. module: base_module_code_stats
 #: view:ir.module.module:base_module_code_stats.view_module_filter
 #: field:ir.module.module,repository:0
 msgid "Repository"
@@ -87,9 +101,15 @@ msgstr "Repository"
 #. module: base_module_code_stats
 #: selection:ir.module.module,type:0
 msgid "Specific"
-msgstr "Specifique"
+msgstr "Spécifique"
 
 #. module: base_module_code_stats
 #: field:ir.module.module,total_code_lines:0
 msgid "Total Number of Lines of Code"
 msgstr "Nombre total de lignes de code"
+
+#. module: base_module_code_stats
+#: selection:ir.module.module,integrator:0
+msgid "With your Integrator"
+msgstr "Avec votre Intégrateur"
+
