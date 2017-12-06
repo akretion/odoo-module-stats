@@ -25,12 +25,13 @@ class IrModuleModule(models.Model):
         ('specific', 'Specific'),
         ], string='Module Type', store=True, readonly=True,
         compute='set_module_type_repository')
-    with_integrator = fields.Boolean(
-        string='With the Integrator', compute='_compute_check_integrator',
-        help="Integrator has participated to the dev of the module")
-    with_only_integrator = fields.Boolean(
-        string='By the Integrator', compute='_compute_check_integrator',
-        help="The module has only one author: the integrator")
+    integrator = fields.Selection([
+        ('with_integrator', 'With your Integrator'),
+        ('only_integrator', 'By your Integrator'),
+        ('other', 'Other integrator'),
+        ], string='Integrator', store=True, readonly=True,
+        compute='_compute_integrator',
+        help="Indicate the degree of participation of the integrator")
     repository = fields.Char(
         string='Repository', store=True, readonly=True,
         compute='set_module_type_repository')
@@ -52,13 +53,15 @@ class IrModuleModule(models.Model):
 
     @api.multi
     @api.depends('author', 'name')
-    def _compute_check_integrator(self):
+    def _compute_integrator(self):
         for rec in self:
             if rec.author and self._get_integator_name() in rec.author and \
                     len(self._get_integator_name()) == len(rec.author):
-                rec.with_only_integrator = True
+                rec.integrator = 'only_integrator'
             elif rec.author and self._get_integator_name() in rec.author:
-                rec.with_integrator = True
+                rec.integrator = 'with_integrator'
+            else:
+                rec.integrator = 'other'
 
     @api.model
     def _get_integator_name(self):
@@ -144,7 +147,7 @@ class IrModuleModule(models.Model):
                             js_cl = lines
                         elif row[1] == u'CSS':
                             css_cl = lines
-            except:
+            except Exception:
                 logger.warning(
                     'Failed to execute the cloc command on module %s',
                     self.name)
