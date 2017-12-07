@@ -14,6 +14,8 @@ import unicodecsv
 
 logger = logging.getLogger(__name__)
 
+OCA = u'Odoo Community Association (OCA)'
+
 
 class IrModuleModule(models.Model):
     _inherit = 'ir.module.module'
@@ -55,23 +57,35 @@ class IrModuleModule(models.Model):
     @api.depends('author', 'name')
     def _compute_integrator(self):
         for rec in self:
-            if rec.author and self._get_integator_name() in rec.author and \
-                    len(self._get_integator_name()) == len(rec.author):
+            author = rec.author.encode('utf-8')
+            author = rec.author.strip(' ')
+            if OCA in rec.author:
+                author = author.replace(u', ', u',')
+                # We remove OCA author
+                author = author.replace(u',%s' % OCA, '')
+            if self._get_integrator_name() in author and \
+                    len(self._get_integrator_name()) == len(author):
+                # same author and same size
                 rec.integrator = 'only_integrator'
-            elif rec.author and self._get_integator_name() in rec.author:
+            elif author and self._get_integrator_name() in author:
                 rec.integrator = 'with_integrator'
             else:
                 rec.integrator = 'other'
 
     @api.model
-    def _get_integator_name(self):
+    def _get_integrator_name(self):
         """ Customize with the integrator name """
-        return 'Akretion'
+        return u'Akretion'
 
     @api.model
     def _get_specific_prefix_module(self):
         """ Customize with the prefix of your specific modules """
         return 'barroux'
+
+    @api.model
+    def _get_list_specific_modules(self):
+        """ Customize with your specific modules """
+        return []
 
     @api.one
     @api.depends('author', 'name')
@@ -99,6 +113,10 @@ class IrModuleModule(models.Model):
             type = 'specific'
         else:
             type = 'community'
+        # Another way here to find specific
+        if isinstance(self.name, (str, unicode)) and \
+                self.name in self._get_list_specific_modules():
+            type = 'specific'
         # set short path
         if module_path:
             module_path = os.path.split(module_path)[1]
