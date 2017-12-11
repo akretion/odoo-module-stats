@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+<data>
+
+    <record id="module_stats_act_server" model="ir.actions.server">
+        <field name="name">Update Code Statistics</field>
+        <field name="model_id" ref="model_ir_module_module"/>
+        <field name="state">code</field>
+        <field name="code">model.browse(env.context['active_ids']).update_code_statistics()</field>
+        <field name="type">ir.actions.server</field>
+        <field name="condition">True</field>
+    </record>
+
+    <record model="ir.values" id="module_stats_act_server_values">
+        <field name="name">Update Code Statistics</field>
+        <field name="action_id" ref="module_stats_act_server" />
+        <field name="value" eval="'ir.actions.server,' + str(ref('module_stats_act_server'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_ir_module_module"/>
+        <field name="model">ir.module.module</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+</data>
+</openerp>

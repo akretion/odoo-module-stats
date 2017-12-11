@@ -177,3 +177,9 @@ class IrModuleModule(models.Model):
         self.python_code_lines = py_cl
         self.css_code_lines = css_cl
         self.total_code_lines = total_cl
+
+    @api.multi
+    def update_code_statistics(self):
+        self._compute_integrator()
+        self.set_module_type_repository()
+        self._compute_code_lines()
