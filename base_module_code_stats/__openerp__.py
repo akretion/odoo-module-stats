@@ -58,6 +58,9 @@ This module has been written by Alexis de Lattre from Akretion
     'website': 'http://www.akretion.com',
     'depends': ['base'],
     'external_dependencies': {'python': ['unicodecsv']},
-    'data': ['module_view.xml'],
+    'data': [
+        'module_view.xml',
+        'module_action.xml'
+    ],
     'installable': True,
 }

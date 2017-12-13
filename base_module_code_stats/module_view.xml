@@ -36,6 +36,7 @@
     <field name="arch"  type="xml">
         <field name="author" position="after">
             <field name="type"/>
+            <field name="total_code_lines"/>
         </field>
     </field>
 </record>
